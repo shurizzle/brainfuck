@@ -1,7 +1,7 @@
 #ifndef _BRAINFUCK_STORAGE_H
 #define _BRAINFUCK_STORAGE_H
 
-#include    <common.h>
+#include    <types.h>
 
 /* Jmps managing functions */
 Jmp     *   JmpNew          (void);
