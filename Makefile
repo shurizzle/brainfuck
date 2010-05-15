@@ -1,3 +1,7 @@
+# Makefile for ``brainfuck''
+
+VERSION =   0.1
+
 CC     ?=   gcc
 CFLAGS  =   -Wall -Wextra -ansi -pedantic -pedantic-errors
 INCS    =   -I/usr/include -Iincludes
@@ -31,5 +35,13 @@ install: all
 uninstall:
 	@echo "Uninstalling binary"
 	@rm "$(DESTDIR)/$(TARGET)"
+
+dist:
+	@echo "Creating tarball..."
+	@mkdir -p "$(TARGET)-$(VERSION)"
+	@cp -R includes sources Makefile README "$(TARGET)-$(VERSION)"
+	@tar -cf "$(TARGET)-$(VERSION).tar" "$(TARGET)-$(VERSION)"
+	@gzip "$(TARGET)-$(VERSION).tar"
+	@rm -R "$(TARGET)-$(VERSION)"
 
 .PHONY: all clean install uninstall
