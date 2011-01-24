@@ -29,13 +29,13 @@ clean: $(OBJECTS) bin/$(TARGET)
 	@rm -R build bin
 
 install: all
-	@mkdir -p "$(PREFIX)/$(DESTDIR)/bin"
+	@mkdir -p "$(DESTDIR)/$(PREFIX)/bin"
 	@echo "Installing binary"
-	@cp "bin/$(TARGET)" "$(PREFIX)/$(DESTDIR)/bin"
+	@cp "bin/$(TARGET)" "$(DESTDIR)/$(PREFIX)/bin"
 
 uninstall:
 	@echo "Uninstalling binary"
-	@rm "$(PREFIX)/$(DESTDIR)/bin/$(TARGET)"
+	@rm "$(DESTDIR)/$(PREFIX)/bin/$(TARGET)"
 
 dist:
 	@echo "Creating tarball..."
