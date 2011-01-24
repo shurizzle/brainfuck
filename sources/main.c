@@ -10,8 +10,8 @@ int
 main (int argc,
       char ** argv)
 {
-    Stack * stack = StackNew ();
-    Jmp * jmps = JmpNew ();
+    Stack * stack;
+    Jmp * jmps;
     FILE * fp;
     char   ch;
 
@@ -26,6 +26,9 @@ main (int argc,
         printf ("File \"%s\" doesn't exist.\n", argv[1]);
         exit (1);
     }
+
+    stack = StackNew ();
+    jmps  = JmpNew ();
 
     while ((fread (&ch, 1, 1, fp)) == 1)
     {
@@ -74,12 +77,12 @@ myget (void)
   struct termios t, old;
   char ch;
 
-  tcgetattr(stdin->_fileno, &t);
+  tcgetattr (stdin->_fileno, &t);
   old = t;
-  cfmakeraw(&t);
-  tcsetattr(stdin->_fileno, 0, &t);
+  cfmakeraw (&t);
+  tcsetattr (stdin->_fileno, 0, &t);
   ch = getchar();
-  tcsetattr(stdin->_fileno, 0, &old);
+  tcsetattr (stdin->_fileno, 0, &old);
 
   return ch;
 }
