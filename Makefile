@@ -5,7 +5,7 @@ VERSION =   0.1
 CC     ?=   gcc
 CFLAGS  =   -Wall -Wextra -ansi -pedantic -pedantic-errors
 INCS    =   -I/usr/include -Iincludes
-DESTDIR?=   /usr/local/bin
+PREFIX ?=		/usr/local
 SOURCES =   sources/main.c sources/storage.c
 OBJECTS =   build/main.o build/storage.o
 TARGET  =   brainfuck
@@ -29,12 +29,13 @@ clean: $(OBJECTS) bin/$(TARGET)
 	@rm -R build bin
 
 install: all
+	@mkdir -p "$(PREFIX)/$(DESTDIR)/bin"
 	@echo "Installing binary"
-	@cp "bin/$(TARGET)" "$(DESTDIR)"
+	@cp "bin/$(TARGET)" "$(PREFIX)/$(DESTDIR)/bin"
 
 uninstall:
 	@echo "Uninstalling binary"
-	@rm "$(DESTDIR)/$(TARGET)"
+	@rm "$(PREFIX)/$(DESTDIR)/bin/$(TARGET)"
 
 dist:
 	@echo "Creating tarball..."
