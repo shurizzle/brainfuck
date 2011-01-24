@@ -3,7 +3,7 @@
 VERSION =   0.1
 
 CC     ?=   gcc
-CFLAGS  =   -Wall -Wextra -ansi -pedantic -pedantic-errors
+CFLAGS  =   -Wall -Wextra -ansi -pedantic -pedantic-errors -D_BSD_SOURCE
 INCS    =   -I/usr/include -Iincludes
 PREFIX ?=		/usr/local
 SOURCES =   sources/main.c sources/storage.c

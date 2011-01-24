@@ -1,5 +1,6 @@
 #include    <stdio.h>
 #include    <stdlib.h>
+#include    <termios.h>
 
 #include    <storage.h>
 
@@ -70,11 +71,15 @@ main (int argc,
 char
 myget (void)
 {
-    char ch[2] = {0};
+  struct termios t, old;
+  char ch;
 
-    while (!ch[0])
-        while ((ch[1] = getchar ()) != 10)
-            ch[0] = ch[1];
+  tcgetattr(stdin->_fileno, &t);
+  old = t;
+  cfmakeraw(&t);
+  tcsetattr(stdin->_fileno, 0, &t);
+  ch = getchar();
+  tcsetattr(stdin->_fileno, 0, &old);
 
-    return ch[0];
+  return ch;
 }
