@@ -34,51 +34,50 @@ main (int argc,
     {
         switch (ch)
         {
-            case ',':
-                StackSet (stack, myget ());
+#ifdef BF_COMMENT_CHAR
+        case BF_COMMENT_CHAR:
+            while (fread (&ch, 1, 1, fp) == 1 && ch != '\n');
             break;
-            case '.':
-                putchar (StackGet (stack));
+#endif
+        case ',':
+            StackSet (stack, myget ());
             break;
-            case '<':
-                StackPrev (&stack);
+        case '.':
+            putchar (StackGet (stack));
             break;
-            case '>':
-                StackNext (&stack);
+        case '<':
+            StackPrev (&stack);
             break;
-            case '+':
-                StackInc (stack);
+        case '>':
+            StackNext (&stack);
             break;
-            case '-':
-                StackDec (stack);
+        case '+':
+            StackInc (stack);
             break;
-            case '[':
-                if (StackGet (stack))
-                    JmpPush (&jmps, ftell (fp));
-                else
+        case '-':
+            StackDec (stack);
+            break;
+        case '[':
+            if (StackGet (stack))
+                JmpPush (&jmps, ftell (fp));
+            else
+            {
+                long nesting_level = 0;
+                while (fread (&ch, 1, 1, fp) == 1 &&
+                       (ch != ']' || nesting_level != 0))
                 {
-                    long nesting_level = 0;
-                    int res;
-                    while ((res = fread (&ch, 1, 1, fp)) == 1 &&
-                           (ch != ']' || nesting_level != 0))
-                    {
-                        if (ch == '[')
-                            nesting_level++;
-                        else if (ch == ']')
-                            nesting_level--;
-                    }
-
-                    /* If we exited the loop because there was no more character
-                     * to read, we should exit. */
-                    if (res != 1)
-                        break;
+                    if (ch == '[')
+                        nesting_level++;
+                    else if (ch == ']')
+                        nesting_level--;
                 }
+            }
             break;
-            case ']':
-                if (StackGet (stack))
-                    fseek (fp, JmpGet (jmps), SEEK_SET);
-                else
-                    JmpDeleteFirst (&jmps);
+        case ']':
+            if (StackGet (stack))
+                fseek (fp, JmpGet (jmps), SEEK_SET);
+            else
+                JmpDeleteFirst (&jmps);
             break;
         }
     }
@@ -93,15 +92,15 @@ main (int argc,
 char
 myget (void)
 {
-  struct termios t, old;
-  char ch;
+    struct termios t, old;
+    char ch;
 
-  tcgetattr (stdin->_fileno, &t);
-  old = t;
-  cfmakeraw (&t);
-  tcsetattr (stdin->_fileno, 0, &t);
-  ch = getchar();
-  tcsetattr (stdin->_fileno, 0, &old);
+    tcgetattr (stdin->_fileno, &t);
+    old = t;
+    cfmakeraw (&t);
+    tcsetattr (stdin->_fileno, 0, &t);
+    ch = getchar();
+    tcsetattr (stdin->_fileno, 0, &old);
 
-  return ch;
+    return ch;
 }

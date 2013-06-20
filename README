@@ -1,2 +1,7 @@
 It's simply a way for wasting my time.
-It's an brainfuck interpreter, nothing difficult :3
+It's a brainfuck interpreter, nothing difficult :3
+
+This version comes with an optional line comment support.
+Compile with
+  $ make BF_COMMENT_CHAR=';'
+to use semicolon as line comment.
