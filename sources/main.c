@@ -53,7 +53,26 @@ main (int argc,
                 StackDec (stack);
             break;
             case '[':
-                JmpPush (&jmps, ftell (fp));
+                if (StackGet (stack))
+                    JmpPush (&jmps, ftell (fp));
+                else
+                {
+                    long nesting_level = 0;
+                    int res;
+                    while ((res = fread (&ch, 1, 1, fp)) == 1 &&
+                           (ch != ']' || nesting_level != 0))
+                    {
+                        if (ch == '[')
+                            nesting_level++;
+                        else if (ch == ']')
+                            nesting_level--;
+                    }
+
+                    /* If we exited the loop because there was no more character
+                     * to read, we should exit. */
+                    if (res != 1)
+                        break;
+                }
             break;
             case ']':
                 if (StackGet (stack))
