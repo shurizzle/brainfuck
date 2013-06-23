@@ -15,9 +15,16 @@ main (int argc,
     FILE * fp;
     char   ch;
 
+    /* Disable buffering to get instant character printing. Useful when a
+     * program is stuck in a loop. */
+    setvbuf(stdout, NULL, _IONBF, 0);
+
     if (argc != 2)
     {
         printf ("USAGE: %s <file>\n", argv[0]);
+#ifdef BF_COMMENT_CHAR
+        printf ("Comment char is '%c'.\n", BF_COMMENT_CHAR);
+#endif
         exit (1);
     }
 
