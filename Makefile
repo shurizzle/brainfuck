@@ -10,6 +10,16 @@ SOURCES =   sources/main.c sources/storage.c
 OBJECTS =   build/main.o build/storage.o
 TARGET  =   brainfuck
 
+ifdef BF_COMMENT_CHAR
+	CFLAGS += -D"BF_COMMENT_CHAR='$(BF_COMMENT_CHAR)'"
+endif
+
+ifdef DEBUG
+	CFLAGS += -O0 -g3
+else
+	CFLAGS += -Os
+endif
+
 all: init $(TARGET)
 
 init:
@@ -17,16 +27,17 @@ init:
 	@mkdir -p bin
 
 $(TARGET): $(OBJECTS)
-	@echo "CC -o $@"
+	@echo "CC  -o $@"
 	@$(CC) $? -o bin/$@
 
 $(OBJECTS): build/%.o: sources/%.c
-	@echo "CC    $<"
+	@echo "CC     $<"
+	@echo "CFLAGS $(CFLAGS)"
 	@$(CC) -c $(CFLAGS) $(INCS) $< -o $@
 
-clean: $(OBJECTS) bin/$(TARGET)
+clean:
 	@echo "Cleaning..."
-	@rm -R build bin
+	@rm -Rfv build bin
 
 install: all
 	@mkdir -p "$(DESTDIR)/$(PREFIX)/bin"

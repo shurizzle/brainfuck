@@ -15,9 +15,16 @@ main (int argc,
     FILE * fp;
     char   ch;
 
+    /* Disable buffering to get instant character printing. Useful when a
+     * program is stuck in a loop. */
+    setvbuf(stdout, NULL, _IONBF, 0);
+
     if (argc != 2)
     {
         printf ("USAGE: %s <file>\n", argv[0]);
+#ifdef BF_COMMENT_CHAR
+        printf ("Comment char is '%c'.\n", BF_COMMENT_CHAR);
+#endif
         exit (1);
     }
 
@@ -34,32 +41,50 @@ main (int argc,
     {
         switch (ch)
         {
-            case ',':
-                StackSet (stack, myget ());
+#ifdef BF_COMMENT_CHAR
+        case BF_COMMENT_CHAR:
+            while (fread (&ch, 1, 1, fp) == 1 && ch != '\n');
             break;
-            case '.':
-                putchar (StackGet (stack));
+#endif
+        case ',':
+            StackSet (stack, myget ());
             break;
-            case '<':
-                StackPrev (&stack);
+        case '.':
+            putchar (StackGet (stack));
             break;
-            case '>':
-                StackNext (&stack);
+        case '<':
+            StackPrev (&stack);
             break;
-            case '+':
-                StackInc (stack);
+        case '>':
+            StackNext (&stack);
             break;
-            case '-':
-                StackDec (stack);
+        case '+':
+            StackInc (stack);
             break;
-            case '[':
+        case '-':
+            StackDec (stack);
+            break;
+        case '[':
+            if (StackGet (stack))
                 JmpPush (&jmps, ftell (fp));
+            else
+            {
+                long nesting_level = 0;
+                while (fread (&ch, 1, 1, fp) == 1 &&
+                       (ch != ']' || nesting_level != 0))
+                {
+                    if (ch == '[')
+                        nesting_level++;
+                    else if (ch == ']')
+                        nesting_level--;
+                }
+            }
             break;
-            case ']':
-                if (StackGet (stack))
-                    fseek (fp, JmpGet (jmps), SEEK_SET);
-                else
-                    JmpDeleteFirst (&jmps);
+        case ']':
+            if (StackGet (stack))
+                fseek (fp, JmpGet (jmps), SEEK_SET);
+            else
+                JmpDeleteFirst (&jmps);
             break;
         }
     }
@@ -74,15 +99,15 @@ main (int argc,
 char
 myget (void)
 {
-  struct termios t, old;
-  char ch;
+    struct termios t, old;
+    char ch;
 
-  tcgetattr (stdin->_fileno, &t);
-  old = t;
-  cfmakeraw (&t);
-  tcsetattr (stdin->_fileno, 0, &t);
-  ch = getchar();
-  tcsetattr (stdin->_fileno, 0, &old);
+    tcgetattr (stdin->_fileno, &t);
+    old = t;
+    cfmakeraw (&t);
+    tcsetattr (stdin->_fileno, 0, &t);
+    ch = getchar();
+    tcsetattr (stdin->_fileno, 0, &old);
 
-  return ch;
+    return ch;
 }
