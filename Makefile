@@ -14,6 +14,12 @@ ifdef BF_COMMENT_CHAR
 	CFLAGS += -D"BF_COMMENT_CHAR='$(BF_COMMENT_CHAR)'"
 endif
 
+ifdef DEBUG
+	CFLAGS += -O0 -g3
+else
+	CFLAGS += -Os
+endif
+
 all: init $(TARGET)
 
 init:
