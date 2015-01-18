@@ -86,6 +86,9 @@ main (int argc,
             else
                 JmpDeleteFirst (&jmps);
             break;
+		case '#':
+			StackPrint(stack);
+			break;
         }
     }
 
