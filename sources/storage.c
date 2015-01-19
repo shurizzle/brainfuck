@@ -127,7 +127,7 @@ StackPrint (Stack * stack)
 		i=printf("%d",tmp->mem);
 		if(!currentStackSpend) cursorPosition+=i+1;
 		if(tmp->next) printf(" ");
-	} while(tmp=tmp->next);
+	} while((tmp=tmp->next));
 	printf("\n");
 
 	for(i=0; i<cursorPosition; i++) printf(" ");
