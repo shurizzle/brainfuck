@@ -21,5 +21,6 @@ int         StackGet            (Stack *);
 void        StackSet            (Stack *, int);
 void        StackFreeSingle     (Stack *);
 void        StackFreeGlobal     (Stack *);
+void        StackPrint          (Stack *);
 
 #endif

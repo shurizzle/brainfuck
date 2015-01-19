@@ -1,6 +1,7 @@
 #include    <stdlib.h>
 
 #include    <storage.h>
+#include    <stdio.h>
 
 Jmp *
 JmpNew (void)
@@ -110,4 +111,25 @@ StackFreeGlobal (Stack * stack)
 
     for (tmp = stack, stack = tmp->next; stack; tmp = stack, stack = stack->next)
         StackFreeSingle (stack);
+}
+
+void
+StackPrint (Stack * stack)
+{
+	Stack * tmp = stack;
+	char currentStackSpend = 0;
+	int i;
+	int cursorPosition=0;
+
+	while(tmp->prev) tmp=tmp->prev;
+	do {
+		if(tmp==stack) currentStackSpend=1;
+		i=printf("%d",tmp->mem);
+		if(!currentStackSpend) cursorPosition+=i+1;
+		if(tmp->next) printf(" ");
+	} while((tmp=tmp->next));
+	printf("\n");
+
+	for(i=0; i<cursorPosition; i++) printf(" ");
+	printf("^\n");
 }
