@@ -4,17 +4,15 @@
 typedef struct Stack Stack;
 typedef struct Jmp Jmp;
 
-struct Stack
-{
-    int         mem;
-    Stack   *   prev;
-    Stack   *   next;
+struct Stack {
+    unsigned int  mem;
+    Stack   *     prev;
+    Stack   *     next;
 };
 
-struct Jmp
-{
-    long int    offset;
-    Jmp     *   next;
+struct Jmp {
+    long int      offset;
+    Jmp     *     next;
 };
 
 #endif

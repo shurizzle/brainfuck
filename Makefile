@@ -4,8 +4,9 @@ VERSION =   0.1
 
 CC     ?=   gcc
 CFLAGS  =   -Wall -Wextra -ansi -pedantic -pedantic-errors -D_BSD_SOURCE
+LDFLAGS	=   -lm
 INCS    =   -I/usr/include -Iincludes
-PREFIX ?=		/usr/local
+PREFIX ?=   /usr/local
 SOURCES =   sources/main.c sources/storage.c
 OBJECTS =   build/main.o build/storage.o
 TARGET  =   brainfuck
@@ -28,7 +29,7 @@ init:
 
 $(TARGET): $(OBJECTS)
 	@echo "CC  -o $@"
-	@$(CC) $? -o bin/$@
+	@$(CC) $? $(LDFLAGS) -o bin/$@
 
 $(OBJECTS): build/%.o: sources/%.c
 	@echo "CC     $<"
