@@ -102,12 +102,12 @@ myget (void)
     struct termios t, old;
     char ch;
 
-    tcgetattr (stdin->_fileno, &t);
+    tcgetattr (fileno(stdin), &t);
     old = t;
     cfmakeraw (&t);
-    tcsetattr (stdin->_fileno, 0, &t);
+    tcsetattr (fileno(stdin), 0, &t);
     ch = getchar();
-    tcsetattr (stdin->_fileno, 0, &old);
+    tcsetattr (fileno(stdin), 0, &old);
 
     return ch;
 }
